@@ -1,0 +1,39 @@
+{
+  "musics": [
+    {
+      "title": "Macintosh",
+      "author": "Gambi",
+      "img": "Gambi-Macintosh.jpg",
+      "url": "Gambi-Macintosh.mp3",
+      "album": "La vie est belle"
+    },
+    {
+      "title": "Plug",
+      "author": "Laylow",
+      "img": "Laylow-Plug.jpg",
+      "url": "Laylow-Plug.mp3",
+      "album": "Trinity"
+    },
+    {
+      "title": "Cabeza",
+      "author": "Oboy",
+      "img": "Oboy-Cabeza.jpg",
+      "url": "Oboy-Cabeza.mp3",
+      "album": "Mafana"
+    },
+    {
+      "title": "Maniaque",
+      "author": "Lefa",
+      "img": "Lefa-Maniaque.png",
+      "url": "Lefa-Maniaque.mp3",
+      "album": "Famous"
+    },
+    {
+      "title": "Je vous déteste tous",
+      "author": "Lorenzo",
+      "img": "Lorenzo-JeVousDetesteTous.jpg",
+      "url": "Lorenzo-JeVousDetesteTous.mp3",
+      "album": "Sex In The City"
+    }
+  ]
+}

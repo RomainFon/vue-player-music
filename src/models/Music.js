@@ -5,5 +5,11 @@ export default class Music {
         this.img = music.img;
         this.url = music.url;
         this.album = music.album;
+        if(music.author === 'Laylow'){
+            this.liked = true;
+        }else{
+            this.liked = false;
+        }
+
     }
 }

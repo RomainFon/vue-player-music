@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import AboutMusic from '../components/AboutMusic'
-import AddMusic from '../components/AddMusic'
 import Player from '../components/Player'
 
 Vue.use(VueRouter)
@@ -14,11 +13,7 @@ const routes = [
       {
         path: 'about/:id',
         component: AboutMusic
-      },
-      {
-        path: 'add',
-        component: AddMusic
-      },
+      }
     ]
   }
 ]

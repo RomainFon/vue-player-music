@@ -10,7 +10,7 @@
             <Music class="effect-width" :music="musicList[currentMusic]" :pause="pause" :next="next" :prev="prev" :isDarkMode="isDarkMode" :class="isPlaylistOpen ? 'music-open-playlist' : 'music-default'"/>
             <div class="settings">
               <v-icon @click="pressPlaylist" :color="isDarkMode ? 'white' : '#151821'" class="pa-4 rounded-tr-xl" :class="isDarkMode ? 'bg-dark' : 'bg-white'">mdi-playlist-music</v-icon>
-              <v-icon @click="addMusic" :color="isDarkMode ? 'white' : '#151821'" class="pa-4" :class="isDarkMode ? 'bg-dark' : 'bg-white'">mdi-plus</v-icon>
+              <v-icon @click="toggleLikedTitle" :color="isDarkMode ? 'white' : '#151821'" class="pa-4" :class="isDarkMode ? 'bg-dark' : 'bg-white'">{{ musicList[currentMusic].liked ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
               <v-icon @click="toggleMode" :color="isDarkMode ? 'white' : '#151821'" class="pa-4 rounded-bl-xl" :class="isDarkMode ? 'bg-dark' : 'bg-white'">mdi-white-balance-sunny</v-icon>
             </div>
             <Playlist class="rounded-custom" :changeMusic="changeMusic" :musicList="musicList" :isDarkMode="isDarkMode" :class="isPlaylistOpen ? 'open-playlist' : 'close-playlist'"></Playlist>
@@ -47,7 +47,7 @@ export default {
     currentMusic: null,
     isDarkMode: true,
     isPlaylistOpen: false,
-    pause: false,
+    pause: false
   }),
   methods: {
     next() {
@@ -79,8 +79,8 @@ export default {
     openAbout() {
       router.push({ path: `/about/${this.currentMusic}` });
     },
-    addMusic() {
-      router.push({ path: `/add` });
+    toggleLikedTitle() {
+      this.musicList[this.currentMusic].liked = !this.musicList[this.currentMusic].liked;
     }
   }
 }

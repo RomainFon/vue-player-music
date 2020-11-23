@@ -3,6 +3,13 @@
     <v-img class="cover-bg" :src="require(`../assets/img/${musicList[currentMusic].img}`)" height="100vh" width="100%"></v-img>
     <v-container class="center-div">
       <v-row class="text-center" justify="center">
+        <v-col class="col-lg-6 col-xl-4 col-8 mb-4">
+          <transition name="fade">
+            <ConfirmModal v-if="showModal" :isDarkMode="isDarkMode" :title="musicList[waitingList[waitingList.length - 1]].title"></ConfirmModal>
+          </transition>
+        </v-col>
+      </v-row>
+      <v-row class="text-center" justify="center">
         <v-col class="col-lg-8 col-xl-6 col-10 pa-0">
           <v-card width="100%" min-height="560px" class="rounded-xl d-flex transparent">
             <v-icon @click="openAbout" class="about-icon pa-4" large>mdi-information</v-icon>
@@ -13,7 +20,7 @@
               <v-icon @click="toggleLikedTitle" :color="isDarkMode ? 'white' : '#151821'" class="pa-4" :class="isDarkMode ? 'bg-dark' : 'bg-white'">{{ musicList[currentMusic].liked ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
               <v-icon @click="toggleMode" :color="isDarkMode ? 'white' : '#151821'" class="pa-4 rounded-bl-xl" :class="isDarkMode ? 'bg-dark' : 'bg-white'">mdi-white-balance-sunny</v-icon>
             </div>
-            <Playlist class="rounded-custom" :changeMusic="changeMusic" :musicList="musicList" :isDarkMode="isDarkMode" :class="isPlaylistOpen ? 'open-playlist' : 'close-playlist'"></Playlist>
+            <Playlist class="rounded-custom" :changeMusic="changeMusic" :addMusicToPlaylist="addMusicToPlaylist" :musicList="musicList" :isDarkMode="isDarkMode" :class="isPlaylistOpen ? 'open-playlist' : 'close-playlist'"></Playlist>
           </v-card>
         </v-col>
       </v-row>
@@ -25,6 +32,7 @@
 import json from '../assets/json/musics.json';
 import mMusic from "@/models/Music";
 import Music from './Music';
+import ConfirmModal from './ConfirmModal';
 import Playlist from './Playlist';
 import router from "@/router";
 
@@ -32,7 +40,8 @@ export default {
   name: "Player",
   components: {
     Music,
-    Playlist
+    Playlist,
+    ConfirmModal
   },
   created() {
     for (let i in json.musics) {
@@ -47,14 +56,26 @@ export default {
     currentMusic: null,
     isDarkMode: true,
     isPlaylistOpen: false,
-    pause: false
+    pause: false,
+    waitingList: [],
+    oldCurrentMusic: null,
+    showModal: false
   }),
   methods: {
     next() {
-      if(this.currentMusic === this.musicList.length - 1) {
-        this.currentMusic = 0;
+      if(this.waitingList.length > 0) {
+        if(this.oldCurrentMusic == null){
+          this.oldCurrentMusic = this.currentMusic;
+        }
+        this.currentMusic = this.waitingList[0];
+        this.waitingList.shift();
       }else{
-        this.currentMusic++;
+        if(this.oldCurrentMusic !== null){
+          this.currentMusic = this.getIndexNextMusic(this.oldCurrentMusic);
+          this.oldCurrentMusic = null;
+        }else{
+          this.currentMusic = this.getIndexNextMusic(this.currentMusic);
+        }
       }
     },
     prev() {
@@ -77,10 +98,23 @@ export default {
       }
     },
     openAbout() {
+      console.log(this.waitingList);
       router.push({ path: `/about/${this.currentMusic}` });
     },
     toggleLikedTitle() {
       this.musicList[this.currentMusic].liked = !this.musicList[this.currentMusic].liked;
+    },
+    addMusicToPlaylist(index) {
+      this.waitingList.push(index);
+      this.showModal = true;
+      setTimeout(() => { this.showModal = false; }, 3000);
+    },
+    getIndexNextMusic(indexMusic){
+      if(indexMusic === this.musicList.length - 1) {
+        return  0;
+      }else{
+        return indexMusic + 1;
+      }
     }
   }
 }
@@ -132,6 +166,13 @@ export default {
 .about-icon{
   position: absolute;
   z-index: 2;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 
 @media screen and (max-width: 800px) {

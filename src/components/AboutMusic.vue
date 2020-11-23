@@ -47,7 +47,6 @@ export default {
   }),
   created() {
     this.music = new Music(json.musics[this.$route.params.id]);
-    console.log(this.music);
   }
 }
 </script>

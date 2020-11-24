@@ -6,7 +6,9 @@
       <h2 class="d-inline">Playlist</h2>
     </div>
 
-    <v-list-item v-for="(music, index) in musicList" :key="index" class="pa-0 item-music" @click="clickOnMusic(index, $event)" v-show="!isPlaylistLiked || music.liked">
+    <SearchBar :searchInPlaylist="searchInPlaylist" :is-dark-mode="isDarkMode"></SearchBar>
+
+    <v-list-item v-for="(music, index) in getPlaylist" :key="index" class="pa-0 item-music" @click="clickOnMusic(index, $event)" v-show="!isPlaylistLiked || music.liked">
         <v-icon @click="clickOnAddPlaylist(index)" class="pr-2 icon-add-next d-none" :color="isDarkMode ? 'white' : '#151821'">mdi-playlist-plus</v-icon>
         <v-list-item-avatar class="rounded-lg">
           <v-img :src="require(`../assets/img/${music.img}`)"></v-img>
@@ -17,16 +19,20 @@
         </v-list-item-content>
     </v-list-item>
 
-    <v-btn @click="togglePlaylist" class="btn-liked">{{ isPlaylistLiked ? 'Tous mes titres' : 'Mes titres likés' }}</v-btn>
+    <v-btn @click="togglePlaylist" class="btn-liked rounded-xl pl-8 pr-8">{{ isPlaylistLiked ? 'Tous mes titres' : 'Mes titres likés' }}</v-btn>
 
   </v-container>
 </template>
 
 <script>
+import SearchBar from "@/components/SearchBar";
+
 export default {
   name: "PlayerAddMusic",
+  components: {SearchBar},
   data: () => ({
-    isPlaylistLiked: false
+    isPlaylistLiked: false,
+    inputSearch: ''
   }),
   props: {
     isDarkMode: Boolean,
@@ -45,6 +51,22 @@ export default {
     },
     clickOnAddPlaylist(index) {
       this.addMusicToPlaylist(index);
+    },
+    searchInPlaylist(search){
+      this.inputSearch = search;
+
+    }
+  },
+  computed: {
+    getPlaylist(){
+      if(this.inputSearch.length > 2) {
+        return this.musicList.filter(item =>
+          item.title.toLowerCase().includes(this.inputSearch.toLowerCase()) ||
+          item.author.toLowerCase().includes(this.inputSearch.toLowerCase())
+        );
+      }else{
+        return this.musicList
+      }
     }
   }
 }

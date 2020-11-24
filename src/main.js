@@ -5,6 +5,18 @@ import router from './router'
 
 Vue.config.productionTip = true
 
+window.addEventListener('load', () => {
+  console.log('load');
+})
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js', { scope: '/'}).then(() => {
+    console.log('Service Worker déclaré !');
+  }).catch(error => {
+    console.error('Erreur: ', error);
+  });
+}
+
 new Vue({
   vuetify,
   router,

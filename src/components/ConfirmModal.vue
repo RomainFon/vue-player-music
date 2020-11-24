@@ -11,9 +11,6 @@ export default {
   props: {
     title: String,
     isDarkMode: Boolean
-  },
-  created() {
-    console.log(this.title);
   }
 }
 </script>

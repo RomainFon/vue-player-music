@@ -1,5 +1,5 @@
 <template>
-  <div class="full-screen">
+  <div class="full-screen" v-if="musicList.length > 0">
     <v-img class="cover-bg" :src="require(`../assets/img/${musicList[currentMusic].img}`)" height="100vh" width="100%"></v-img>
     <v-container class="center-div">
       <v-row class="text-center" justify="center">
@@ -29,12 +29,13 @@
 </template>
 
 <script>
-import json from '../assets/json/musics.json';
+
 import mMusic from "@/models/Music";
 import Music from './Music';
 import ConfirmModal from './ConfirmModal';
 import Playlist from './Playlist';
 import router from "@/router";
+import "@/plugins/firebase";
 
 export default {
   name: "Player",
@@ -44,9 +45,14 @@ export default {
     ConfirmModal
   },
   created() {
-    for (let i in json.musics) {
-      this.musicList.push(new mMusic(json.musics[i]));
-    }
+    const db = this.$firebase.database().ref('/musics');
+    db.on("value", (snapshot) => {
+      for (let i in snapshot.val()) {
+        this.musicList.push(new mMusic(snapshot.val()[i]));
+      }
+    }, function (errorObject) {
+      console.log("The read failed: " + errorObject.code);
+    });
     if (this.musicList) {
       this.currentMusic = 0;
     }

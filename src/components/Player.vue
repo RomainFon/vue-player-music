@@ -104,7 +104,6 @@ export default {
       }
     },
     openAbout() {
-      console.log(this.waitingList);
       router.push({ path: `/about/${this.currentMusic}` });
     },
     toggleLikedTitle() {
